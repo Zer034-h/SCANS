@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="theme-color" content="#1e40af">
+    <meta name="description" content="Keranjang Belanja - SCANS">
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Momo+Signature&display=swap" rel="stylesheet">
+    <title>Keranjang Belanja - SCANS</title>
+</head>
+<body>
+
+<nav class="Top"><P><b>SCANS</b></P></nav>
+<header><h1>Keranjang Belanja</h1></header>
+
+<div class="container payment-container">
+    
+    <!-- Cart Items -->
+    <div class="cart-section">
+        <h2><i class="fas fa-shopping-cart"></i> Pesanan Anda</h2>
+        <div id="cartItems"></div>
+        <div id="emptyCart" class="empty-cart" style="display: none;">
+            <i class="fas fa-shopping-basket"></i>
+            <p>Keranjang belanja Anda masih kosong</p>
+            <a href="index.html" class="btn-primary">Mulai Belanja</a>
+        </div>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="order-summary">
+        <h3>Ringkasan Pesanan</h3>
+        <div class="summary-row">
+            <span>Subtotal</span>
+            <span id="subtotal">Rp 0</span>
+        </div>
+        <div class="summary-row">
+            <span>Biaya Admin</span>
+            <span id="adminFee">Rp 1.000</span>
+        </div>
+        <hr>
+        <div class="summary-row total">
+            <span><strong>Total</strong></span>
+            <span id="total"><strong>Rp 0</strong></span>
+        </div>
+    </div>
+
+    <!-- Checkout Form -->
+    <div class="checkout-form" id="checkoutForm" style="display: none;">
+        <h2><i class="fas fa-user"></i> Informasi Pembeli</h2>
+        <form id="orderForm">
+            <div class="form-group">
+                <label for="customerName"><i class="fas fa-user"></i> Nama Lengkap *</label>
+                <input type="text" id="customerName" name="customerName" required placeholder="Masukkan nama Anda">
+            </div>
+            
+            <div class="form-group">
+                <label for="customerEmail"><i class="fas fa-envelope"></i> Email *</label>
+                <input type="email" id="customerEmail" name="customerEmail" required placeholder="contoh@email.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="customerPhone"><i class="fas fa-phone"></i> No. Telepon *</label>
+                <input type="tel" id="customerPhone" name="customerPhone" required placeholder="08xxxxxxxxxx">
+            </div>
+            
+            <div class="form-group">
+                <label for="customerNote"><i class="fas fa-comment"></i> Catatan (Opsional)</label>
+                <textarea id="customerNote" name="customerNote" rows="3" placeholder="Contoh: Pedas sedang, tanpa cabe"></textarea>
+            </div>
+
+            <button type="submit" class="btn-checkout" id="btnCheckout">
+                <i class="fas fa-lock"></i> Bayar Sekarang
+            </button>
+        </form>
+    </div>
+
+</div>
+
+<footer id="footer">
+    <a href="stores.html">
+        <i class="fas fa-store"></i>
+        <span class="footer-label">Pilih Toko</span>
+    </a>
+    <a href="index.html">
+        <i class="fas fa-utensils"></i>
+        <span class="footer-label">Menu</span>
+    </a>
+    <a href="payment.html" class="cart-icon-wrapper active">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cartBadge" class="cart-badge">0</span>
+        <span class="footer-label">Keranjang</span>
+    </a>
+</footer>
+
+<!-- Midtrans Snap Script -->
+<script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="YOUR-CLIENT-KEY-HERE"></script>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<script src="js/firebase-config.js"></script>
+<script src="js/firebase-realtime.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/auth-guard.js"></script>
+<script src="js/queue-system.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/payment.js"></script>
+
+</body>
+</html>

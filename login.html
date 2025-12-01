@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <title>Login - SCANS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
+</head>
+<body class="auth-page">
+
+<div class="auth-container">
+    <div class="auth-box">
+        <!-- Logo & Title -->
+        <div class="auth-header">
+            <div class="auth-logo">
+                <i class="fas fa-utensils"></i>
+            </div>
+            <h1>SCANS</h1>
+            <p>Selamat datang kembali!</p>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" class="auth-form">
+            <div class="form-group">
+                <label for="username">
+                    <i class="fas fa-user"></i>
+                    Username atau Email
+                </label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    placeholder="Masukkan username atau email"
+                    required
+                    autocomplete="username"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">
+                    <i class="fas fa-lock"></i>
+                    Password
+                </label>
+                <div class="password-input-wrapper">
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        placeholder="Masukkan password"
+                        required
+                        autocomplete="current-password"
+                    >
+                    <button type="button" class="toggle-password" onclick="togglePassword('password')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-options">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="remember" name="remember">
+                    <span>Ingat saya</span>
+                </label>
+                <a href="forgot-password.html" class="forgot-link">Lupa password?</a>
+            </div>
+
+            <button type="submit" class="btn-auth btn-primary">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Masuk</span>
+            </button>
+
+            <!-- Divider -->
+            <div class="auth-divider">
+                <span>atau</span>
+            </div>
+
+            <!-- Quick Login (Demo) -->
+            <div class="quick-login">
+                <p class="quick-login-title">Login Cepat (Demo):</p>
+                <div class="quick-login-buttons">
+                    <button type="button" class="btn-quick-login" onclick="quickLogin('admin')">
+                        <i class="fas fa-user-shield"></i> Admin
+                    </button>
+                    <button type="button" class="btn-quick-login" onclick="quickLogin('manager')">
+                        <i class="fas fa-store"></i> Manager
+                    </button>
+                    <button type="button" class="btn-quick-login" onclick="quickLogin('user')">
+                        <i class="fas fa-user"></i> User
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Register Link -->
+        <div class="auth-footer">
+            <p>Belum punya akun? <a href="register.html">Daftar sekarang</a></p>
+        </div>
+
+        <!-- Back to Home -->
+        <div class="auth-back">
+            <a href="home.html">
+                <i class="fas fa-arrow-left"></i> Kembali ke beranda
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Alert Container -->
+<div id="alertContainer"></div>
+
+<!-- Scripts -->
+<script src="js/firebase-config.js"></script>
+<script src="js/firebase-realtime.js"></script>
+<script src="js/firebase-auth.js"></script>
+<script src="js/auth.js"></script>
+<script>
+    // HYBRID LOGIN - Firebase Auth + Demo Fallback
+    document.addEventListener('DOMContentLoaded', async () => {
+        console.log('Login page loaded');
+        
+        // Wait for Firebase to initialize
+        let firebaseReady = false;
+        let attempts = 0;
+        while (!firebaseReady && attempts < 20) {
+            if (typeof firebaseApp !== 'undefined' && firebaseApp.getAuth && firebaseApp.getAuth()) {
+                firebaseReady = true;
+                console.log('✅ Firebase ready');
+            } else {
+                await new Promise(resolve => setTimeout(resolve, 200));
+                attempts++;
+            }
+        }
+        
+        // Initialize login form
+        const loginForm = document.getElementById('loginForm');
+        if (loginForm) {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const btn = e.target.querySelector('button[type="submit"]');
+                const originalHTML = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Loading...</span>';
+                
+                try {
+                    const usernameOrEmail = document.getElementById('username').value.trim();
+                    const password = document.getElementById('password').value;
+                    const remember = document.getElementById('remember').checked;
+                    
+                    if (!usernameOrEmail || !password) {
+                        showAlert('error', 'Username/email dan password harus diisi');
+                        btn.disabled = false;
+                        btn.innerHTML = originalHTML;
+                        return;
+                    }
+                    
+                    console.log('Attempting login for:', usernameOrEmail);
+                    
+                    // Try Firebase Auth first (if available)
+                    if (firebaseReady && typeof firebaseAuth !== 'undefined' && firebaseAuth.handleFirebaseLogin) {
+                        console.log('Trying Firebase Auth...');
+                        const result = await firebaseAuth.handleFirebaseLogin(usernameOrEmail, password);
+                        
+                        if (result.success && result.user) {
+                            // Save auth data
+                            if (typeof saveAuthData !== 'undefined') {
+                                await saveAuthData(result.user, result.user.id);
+                            }
+                            
+                            // Log activity
+                            if (window.ActivityLogger) {
+                                ActivityLogger.login(result.user.id, 'firebase');
+                            }
+                            
+                            showAlert('success', 'Login berhasil!');
+                            
+                            setTimeout(() => {
+                                if (typeof redirectByRole !== 'undefined') {
+                                    redirectByRole(result.user.role_name || 'user');
+                                } else {
+                                    window.location.href = 'home.html';
+                                }
+                            }, 1000);
+                            return;
+                        } else {
+                            console.log('Firebase Auth failed:', result.error);
+                            // Fall through to demo mode
+                        }
+                    }
+                    
+                    // Fallback to demo mode (always works)
+                    console.log('Using demo mode login...');
+                    if (typeof handleDemoLogin !== 'undefined') {
+                        await handleDemoLogin(usernameOrEmail, password, remember);
+                    } else if (typeof handleLogin !== 'undefined') {
+                        await handleLogin(usernameOrEmail, password, remember);
+                    } else {
+                        // Final fallback: Direct demo login
+                        await performDirectLogin(usernameOrEmail, password, remember);
+                    }
+                    
+                } catch (error) {
+                    console.error('Login error:', error);
+                    showAlert('error', error.message || 'Login gagal. Silakan coba lagi.');
+                    btn.disabled = false;
+                    btn.innerHTML = originalHTML;
+                }
+            });
+        }
+    });
+    
+    // Direct login function (fallback)
+    async function performDirectLogin(username, password, remember) {
+        const demoUsers = {
+            'admin': {
+                id: 1,
+                username: 'admin',
+                email: 'admin@scans.com',
+                full_name: 'System Administrator',
+                role_id: 1,
+                role_name: 'admin',
+                role_display_name: 'Administrator',
+                password: 'admin123'
+            },
+            'manager_buani': {
+                id: 2,
+                username: 'manager_buani',
+                email: 'manager@buani.com',
+                full_name: 'Manager Bu Ani',
+                role_id: 2,
+                role_name: 'store_manager',
+                role_display_name: 'Pengelola Toko',
+                store_id: 1,
+                store_name: 'Kantin Bu Ani',
+                password: 'manager123'
+            },
+            'manager_budi': {
+                id: 3,
+                username: 'manager_budi',
+                email: 'manager@budi.com',
+                full_name: 'Manager Mas Budi',
+                role_id: 2,
+                role_name: 'store_manager',
+                role_display_name: 'Pengelola Toko',
+                store_id: 2,
+                store_name: 'Warung Mas Budi',
+                password: 'manager123'
+            },
+            'manager_kopi': {
+                id: 4,
+                username: 'manager_kopi',
+                email: 'manager@kopi.com',
+                full_name: 'Manager Kedai Kopi',
+                role_id: 2,
+                role_name: 'store_manager',
+                role_display_name: 'Pengelola Toko',
+                store_id: 3,
+                store_name: 'Kedai Kopi & Snack',
+                password: 'manager123'
+            },
+            'user_test': {
+                id: 5,
+                username: 'user_test',
+                email: 'user@test.com',
+                full_name: 'Test User',
+                role_id: 3,
+                role_name: 'user',
+                role_display_name: 'Pembeli',
+                password: 'user123'
+            }
+        };
+        
+        const user = demoUsers[username] || demoUsers[Object.keys(demoUsers).find(key => demoUsers[key].email === username)];
+        
+        if (!user) {
+            throw new Error('Username atau email tidak ditemukan');
+        }
+        
+        if (user.password !== password) {
+            throw new Error('Password salah');
+        }
+        
+        // Generate token
+        const token = 'demo_token_' + Date.now() + '_' + Math.random().toString(36).substring(7);
+        
+        // Save auth data
+        const userData = { ...user };
+        delete userData.password;
+        
+        const authData = {
+            user: userData,
+            token: token,
+            timestamp: Date.now(),
+            expires: Date.now() + (24 * 60 * 60 * 1000) // 24 hours
+        };
+        
+        localStorage.setItem('scans_auth', JSON.stringify(authData));
+        sessionStorage.setItem('scans_auth', JSON.stringify(authData));
+        
+        // Log activity
+        if (window.ActivityLogger) {
+            ActivityLogger.login(userData.id, 'demo');
+        }
+        
+        showAlert('success', 'Login berhasil!');
+        
+        // Redirect based on role
+        setTimeout(() => {
+            switch(user.role_name) {
+                case 'admin':
+                    window.location.href = 'admin-dashboard.html';
+                    break;
+                case 'store_manager':
+                    window.location.href = 'manager-dashboard.html';
+                    break;
+                case 'user':
+                default:
+                    window.location.href = 'home.html';
+                    break;
+            }
+        }, 1000);
+    }
+
+    // Quick login for demo
+    function quickLogin(role) {
+        let username, password;
+        
+        switch(role) {
+            case 'admin':
+                username = 'admin';
+                password = 'admin123';
+                break;
+            case 'manager':
+                username = 'manager_buani';
+                password = 'manager123';
+                break;
+            case 'user':
+                username = 'user_test';
+                password = 'user123';
+                break;
+        }
+        
+        document.getElementById('username').value = username;
+        document.getElementById('password').value = password;
+        
+        // Direct login without form submit
+        performDirectLogin(username, password, false).catch(error => {
+            console.error('Quick login error:', error);
+            showAlert('error', error.message || 'Login gagal');
+        });
+    }
+    
+    // Ensure showAlert is available
+    if (typeof showAlert === 'undefined') {
+        window.showAlert = function(type, message) {
+            const container = document.getElementById('alertContainer') || document.body;
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            const bgColor = type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : type === 'warning' ? '#ff9800' : '#2196F3';
+            const icon = type === 'success' ? 'check' : type === 'error' ? 'times' : 'info';
+            alert.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                background: ${bgColor};
+                color: white;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-size: 14px;
+                min-width: 250px;
+            `;
+            alert.innerHTML = `<i class="fas fa-${icon}-circle"></i> <span>${message}</span>`;
+            container.appendChild(alert);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                alert.style.opacity = '0';
+                alert.style.transition = 'opacity 0.3s';
+                setTimeout(() => alert.remove(), 300);
+            }, 5000);
+        };
+    }
+    
+    // Ensure redirectByRole is available
+    if (typeof redirectByRole === 'undefined') {
+        window.redirectByRole = function(roleName) {
+            switch(roleName) {
+                case 'admin':
+                    window.location.href = 'admin-dashboard.html';
+                    break;
+                case 'store_manager':
+                    window.location.href = 'manager-dashboard.html';
+                    break;
+                case 'user':
+                default:
+                    window.location.href = 'home.html';
+                    break;
+            }
+        };
+    }
+
+    // Toggle password visibility
+    function togglePassword(fieldId) {
+        const field = document.getElementById(fieldId);
+        const button = field.nextElementSibling;
+        const icon = button.querySelector('i');
+        
+        if (field.type === 'password') {
+            field.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            field.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+</script>
+
+</body>
+</html>
+

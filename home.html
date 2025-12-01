@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="theme-color" content="#1e40af">
+    <meta name="description" content="SCANS - Pesan makanan favorit dari semua toko dengan mudah!">
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <title>Beranda - SCANS</title>
+</head>
+<body>
+
+<nav class="Top">
+    <P><b>SCANS</b></P>
+</nav>
+
+<div class="container home-container">
+    
+    <!-- Hero Section dengan Search -->
+    <div class="home-hero">
+        <div class="hero-content">
+            <h2 class="hero-title">Lapar? Cari Menu Favoritmu! 🔍</h2>
+            <p class="hero-description">Cari dari 50+ menu di 3 toko berbeda</p>
+            
+            <!-- Global Search Bar -->
+            <div class="global-search-container">
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input 
+                        type="text" 
+                        class="global-search-input" 
+                        id="globalSearchInput"
+                        placeholder="Cari nasi goreng, mie ayam, kopi..." 
+                        autocomplete="off"
+                    >
+                    <button class="search-clear-btn" id="globalSearchClear" style="display: none;">
+                        ✕
+                    </button>
+                </div>
+                
+                <!-- Search Suggestions Dropdown -->
+                <div class="search-suggestions" id="searchSuggestions" style="display: none;"></div>
+            </div>
+            
+            <!-- Quick Filters -->
+            <div class="quick-filters">
+                <button class="quick-filter-btn active" data-filter="all">
+                    <i class="fas fa-th"></i> Semua
+                </button>
+                <button class="quick-filter-btn" data-filter="popular">
+                    <i class="fas fa-fire"></i> Populer
+                </button>
+                <button class="quick-filter-btn" data-filter="cheapest">
+                    <i class="fas fa-arrow-down"></i> Termurah
+                </button>
+                <button class="quick-filter-btn" data-filter="food">
+                    <i class="fas fa-utensils"></i> Makanan
+                </button>
+                <button class="quick-filter-btn" data-filter="drink">
+                    <i class="fas fa-coffee"></i> Minuman
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Search Results Count -->
+    <div class="search-results-header" id="searchResultsHeader" style="display: none;">
+        <h3 id="searchResultsTitle">Hasil Pencarian</h3>
+        <p id="searchResultsCount">0 menu ditemukan</p>
+    </div>
+    
+    <!-- Menu Grid (Global Search Results) -->
+    <div class="menu-section" id="menuSection">
+        <div class="section-header">
+            <h3>✨ Menu Populer dari Semua Toko</h3>
+            <p class="section-subtitle">Menu terlaris minggu ini</p>
+        </div>
+        
+        <div class="menu-grid" id="globalMenuGrid">
+            <!-- Products will be loaded here via JavaScript -->
+            <div class="loading-state">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Memuat menu...</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Store Categories Quick Access -->
+    <div class="store-quick-access">
+        <h3>🏪 Atau Pilih Toko</h3>
+        <div class="store-quick-grid">
+            <a href="stores.html" class="store-quick-card">
+                <div class="store-quick-icon">🍚</div>
+                <h4>Kantin Bu Ani</h4>
+                <p>Masakan Rumahan</p>
+                <span class="store-quick-badge">25+ Menu</span>
+            </a>
+            
+            <a href="stores.html" class="store-quick-card">
+                <div class="store-quick-icon">🍜</div>
+                <h4>Warung Mas Budi</h4>
+                <p>Mie & Bakso</p>
+                <span class="store-quick-badge">18+ Menu</span>
+            </a>
+            
+            <a href="stores.html" class="store-quick-card">
+                <div class="store-quick-icon">☕</div>
+                <h4>Kedai Kopi</h4>
+                <p>Kopi & Snack</p>
+                <span class="store-quick-badge">30+ Menu</span>
+            </a>
+        </div>
+    </div>
+    
+</div>
+
+<!-- Footer Navigation -->
+<footer id="footer">
+    <a href="home.html" class="footer-nav-item active">
+        <i class="fas fa-home"></i>
+        <span class="footer-label">Beranda</span>
+    </a>
+    <a href="stores.html" class="footer-nav-item">
+        <i class="fas fa-store"></i>
+        <span class="footer-label">Toko</span>
+    </a>
+    <a href="payment.html" class="cart-icon-wrapper footer-nav-item">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cartBadge" class="cart-badge">0</span>
+        <span class="footer-label">Keranjang</span>
+    </a>
+
+</footer>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<!-- Scripts -->
+<script src="js/firebase-config.js"></script>
+<script src="js/firebase-realtime.js"></script>
+<script src="js/firebase-data.js"></script>
+<script src="js/data-loader.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/auth-guard.js"></script>
+<script src="js/queue-system.js"></script>
+<script src="js/home.js"></script>
+<script>
+    // Check authentication first
+    document.addEventListener('DOMContentLoaded', () => {
+        // Wait for auth functions to load
+        setTimeout(() => {
+            if (typeof isAuthenticated === 'undefined' || !isAuthenticated()) {
+                sessionStorage.setItem('intended_url', window.location.href);
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Show user info in header
+            const user = getCurrentUser();
+            if (user) {
+            // Update UI dengan user info
+            const headerNav = document.querySelector('.Top');
+            if (headerNav && user.full_name) {
+                headerNav.innerHTML = `
+                    <P><b>SCANS</b></P>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 13px; color: #ffffff; background: rgba(255, 255, 255, 0.2); padding: 6px 12px; border-radius: 20px; font-weight: 500; backdrop-filter: blur(10px);">👤 ${user.full_name}</span>
+                        <button onclick="handleLogout()" style="background: #f44336; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 500;">
+                            Logout
+                        </button>
+                    </div>
+                `;
+            }
+        }
+        
+        // Initialize cart badge
+        const cart = new ShoppingCart();
+        cart.updateCartBadge();
+        
+            // Log page view
+            setTimeout(() => {
+                if (window.ActivityLogger) {
+                    ActivityLogger.custom('home_page_view', { 
+                        timestamp: Date.now() 
+                    }, 'navigation');
+                }
+            }, 1000);
+        }, 300);
+    });
+</script>
+
+</body>
+</html>
+

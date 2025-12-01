@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="theme-color" content="#1e40af">
+    <meta name="description" content="SCANS - Pesan makanan favorit Anda dengan mudah dan cepat!">
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=home" />
+    <title>SCANS</title>
+</head>
+<body>
+
+<nav class="Top">
+    <P><b>SCANS</b></P>
+    <button class="btn-change-store" onclick="changeStore()" title="Ganti Toko">
+        <i class="fas fa-store"></i>
+    </button>
+</nav>
+<header>
+    <div class="header-store-info" id="headerStoreInfo">
+        <div class="store-small-logo" id="storeSmallLogo"></div>
+        <div class="store-header-text">
+            <h2 id="storeName">Loading...</h2>
+            <p id="storeTagline">Memuat data toko...</p>
+        </div>
+    </div>
+    <h1>Menu Hari Ini</h1>
+</header>
+
+<div class="container">
+    <div class="grid-tabel">
+        <div class="slider-container">
+            <div class="slider">
+                <img src="asset/img/gorengan.png" alt="makanan">
+                <img src="asset/img/nasgor.png" alt="makanan">
+                <img src="asset/img/mieayam.png" alt="makanan">
+                <img src="asset/img/baso.png" alt="makanan">
+            </div>
+        </div>
+    </div>
+
+<div class="text-wrap" id="textWrap"><span class="phrase"></span></div>
+
+<div class="fixed-slider">
+    <div class="scroll-area">
+        <img src="asset/img/6.png">
+        <img src="asset/img/7.png">
+        <img src="asset/img/8.png">
+        <img src="asset/img/9.png">
+    </div>
+</div>
+
+<section class="menu-section">
+    <h2 class="section-title">
+        <span class="title-icon">🔥</span>
+        Menu Jajanan yang Lagi Viral
+        <span class="title-icon">✨</span>
+    </h2>
+    
+    <!-- Search & Filter Section -->
+    <div class="search-filter-section">
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input 
+                type="text" 
+                id="searchInput" 
+                placeholder="Cari menu favorit Anda..." 
+                onkeyup="searchProducts()"
+            >
+            <button class="btn-clear-search" id="btnClearSearch" onclick="clearSearch()" style="display: none;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <!-- Filter Buttons -->
+        <div class="filter-section">
+            <button class="filter-btn active" onclick="filterProducts('all')" data-filter="all">
+                <i class="fas fa-th"></i>
+                <span>Semua</span>
+            </button>
+            <button class="filter-btn" onclick="filterProducts('popular')" data-filter="popular">
+                <i class="fas fa-fire"></i>
+                <span>Populer</span>
+            </button>
+            <button class="filter-btn" onclick="filterProducts('price-low')" data-filter="price-low">
+                <i class="fas fa-arrow-down"></i>
+                <span>Termurah</span>
+            </button>
+            <button class="filter-btn" onclick="filterProducts('price-high')" data-filter="price-high">
+                <i class="fas fa-arrow-up"></i>
+                <span>Termahal</span>
+            </button>
+            <button class="filter-btn" onclick="filterProducts('name')" data-filter="name">
+                <i class="fas fa-sort-alpha-down"></i>
+                <span>A-Z</span>
+            </button>
+        </div>
+        
+        <!-- Filter Pills (Active Filters) -->
+        <div class="active-filters" id="activeFilters" style="display: none;">
+            <span class="filter-label">Filter Aktif:</span>
+            <span class="filter-pill" id="filterPill">
+                <span id="filterText">Semua</span>
+                <button onclick="resetFilters()"><i class="fas fa-times"></i></button>
+            </span>
+        </div>
+        
+        <!-- Results Count -->
+        <div class="results-info">
+            <span id="resultsCount">Menampilkan semua menu</span>
+        </div>
+    </div>
+    
+    <div class="menu-grid" id="menuGrid">
+        <div class="menu-card" data-menu-id="1">
+            <div class="menu-card-image">
+            <img src="asset/img/nasgor.png" alt="Nasi Goreng">
+                <div class="menu-badge">Best Seller</div>
+            </div>
+            <div class="menu-card-content">
+                <h3 class="menu-title">Nasi Goreng</h3>
+                <p class="menu-description">Nasi Goreng Resep Arin — wangi, berbumbu pas, dan dimasak dengan api besar untuk rasa yang lebih mantap!</p>
+                <div class="menu-footer">
+                    <span class="menu-price">Rp 15.000</span>
+                    <button class="btn-add-cart" onclick="addToCart(1, this)">
+                        <i class="fas fa-cart-plus"></i>
+                        <span>Tambah</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-card" data-menu-id="2">
+            <div class="menu-card-image">
+                <img src="asset/img/miebaso.png" alt="Mie Baso">
+                <div class="menu-badge">Best Seller</div>
+            </div>
+            <div class="menu-card-content">
+                <h3 class="menu-title">Mie Baso</h3>
+                <p class="menu-description">Mie Baso Resep Arin — mie kenyal, kuah gurih, dan baso lembut yang bikin ketagihan!</p>
+                <div class="menu-footer">
+                    <span class="menu-price">Rp 15.000</span>
+                    <button class="btn-add-cart" onclick="addToCart(2, this)">
+                        <i class="fas fa-cart-plus"></i>
+                        <span>Tambah</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-card" data-menu-id="3">
+            <div class="menu-card-image">
+                <img src="asset/img/mieayam.png" alt="Mie Ayam">
+            </div>
+            <div class="menu-card-content">
+                <h3 class="menu-title">Mie Ayam</h3>
+                <p class="menu-description">Mie Ayam spesial dengan topping ayam suwir yang lezat!</p>
+                <div class="menu-footer">
+                    <span class="menu-price">Rp 12.000</span>
+                    <button class="btn-add-cart" onclick="addToCart(3, this)">
+                        <i class="fas fa-cart-plus"></i>
+                        <span>Tambah</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-card" data-menu-id="4">
+            <div class="menu-card-image">
+                <img src="asset/img/gorengan.png" alt="Gorengan">
+            </div>
+            <div class="menu-card-content">
+                <h3 class="menu-title">Gorengan</h3>
+                <p class="menu-description">Gorengan crispy aneka isi - tahu, tempe, pisang!</p>
+                <div class="menu-footer">
+                    <span class="menu-price">Rp 5.000</span>
+                    <button class="btn-add-cart" onclick="addToCart(4, this)">
+                        <i class="fas fa-cart-plus"></i>
+                        <span>Tambah</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    </div>
+
+<footer id="footer">
+    <a href="stores.html">
+        <i class="fas fa-store"></i>
+        <span class="footer-label">Pilih Toko</span>
+    </a>
+    <a href="index.html" class="active">
+        <i class="fas fa-utensils"></i>
+        <span class="footer-label">Menu</span>
+    </a>
+    <a href="payment.html" class="cart-icon-wrapper">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cartBadge" class="cart-badge">0</span>
+        <span class="footer-label">Keranjang</span>
+    </a>
+    <a href="home.html">
+        <i class="fas fa-home"></i>
+        <span class="footer-label">Beranda</span>
+    </a>
+</footer>
+
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<script src="js/firebase-config.js"></script>
+<script src="js/firebase-realtime.js"></script>
+<script src="js/firebase-data.js"></script>
+<script src="js/data-loader.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/auth-guard.js"></script>
+<script src="js/queue-system.js"></script>
+<script src="js/stores-data.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/script.js"></script>
+<script>
+    // Initialize cart globally
+    let cart;
+    
+    // Initialize cart immediately when ShoppingCart is available
+    if (typeof ShoppingCart !== 'undefined') {
+        cart = new ShoppingCart();
+    }
+    
+    // Check authentication FIRST
+    document.addEventListener('DOMContentLoaded', () => {
+        // Ensure cart is initialized
+        if (!cart && typeof ShoppingCart !== 'undefined') {
+            cart = new ShoppingCart();
+        }
+        
+        // Wait for auth functions to load
+        setTimeout(() => {
+            if (typeof isAuthenticated === 'undefined' || !isAuthenticated()) {
+                sessionStorage.setItem('intended_url', window.location.href);
+                window.location.href = 'login.html';
+                return;
+            }
+        
+            // Get user info
+            const user = getCurrentUser();
+            
+            // Update nav dengan user info
+            if (user) {
+                const nav = document.querySelector('.Top');
+                if (nav) {
+                    nav.innerHTML = `
+                        <P><b>SCANS</b></P>
+                        <div style="display: flex; align-items: center; gap: 10px; font-size: 13px;">
+                            <span style="color: #ffffff; background: rgba(255, 255, 255, 0.2); padding: 6px 12px; border-radius: 20px; font-weight: 500; backdrop-filter: blur(10px);">👤 ${user.full_name}</span>
+                            <button class="btn-change-store" onclick="changeStore()" title="Ganti Toko" style="background: rgba(255, 255, 255, 0.2); color: white; border: 2px solid rgba(255, 255, 255, 0.3); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 500;">
+                                <i class="fas fa-store"></i> Ganti Toko
+                            </button>
+                            <button onclick="handleLogout()" style="background: #f44336; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 500;">
+                                Logout
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+            
+            // Check if store is selected
+            const selectedStoreStr = localStorage.getItem('selectedStore');
+            if (!selectedStoreStr) {
+                // Redirect to stores page if no store selected
+                window.location.href = 'stores.html';
+                return;
+            }
+            
+            const selectedStore = JSON.parse(selectedStoreStr);
+            
+            // Display store info
+            if (typeof storesData !== 'undefined') {
+                const storeData = storesData.find(s => s.id == selectedStore.id);
+                if (storeData) {
+                    const storeNameEl = document.getElementById('storeName');
+                    const storeTaglineEl = document.getElementById('storeTagline');
+                    const storeSmallLogoEl = document.getElementById('storeSmallLogo');
+                    
+                    if (storeNameEl) storeNameEl.textContent = storeData.name;
+                    if (storeTaglineEl) storeTaglineEl.textContent = storeData.tagline;
+                    if (storeSmallLogoEl) storeSmallLogoEl.innerHTML = `<img src="${storeData.logo}" alt="${storeData.name}">`;
+                }
+            }
+            
+            // Load products (Firebase or local) - async
+            (async () => {
+                const storeId = selectedStore.id;
+                
+                if (typeof dataLoader !== 'undefined' && dataLoader.loadProducts) {
+                    try {
+                        const products = await dataLoader.loadProducts(storeId);
+                        console.log(`✅ Loaded ${products.length} products for store ${storeId}`);
+                        
+                        // Update menuItems if loaded from Firebase
+                        if (products.length > 0) {
+                            window.menuItems = products;
+                            // Also update global menuItems for compatibility
+                            if (typeof menuItems === 'undefined') {
+                                window.menuItems = products;
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error loading products:', error);
+                    }
+                }
+                
+                // Get menuItems from multiple sources
+                let allMenuItems = [];
+                if (typeof menuItems !== 'undefined' && Array.isArray(menuItems) && menuItems.length > 0) {
+                    allMenuItems = menuItems;
+                } else if (typeof window.menuItems !== 'undefined' && Array.isArray(window.menuItems) && window.menuItems.length > 0) {
+                    allMenuItems = window.menuItems;
+                }
+                
+                // Filter menuItems hanya untuk toko ini
+                const storeMenuItems = allMenuItems.filter(item => item.store_id == storeId);
+                
+                console.log(`📦 Showing ${storeMenuItems.length} products from store ${storeId}`);
+                
+                // Update storeProducts for filtering
+                storeProducts = storeMenuItems;
+                
+                // Render products dari toko ini saja
+                if (storeMenuItems.length > 0) {
+                    renderProducts(storeMenuItems);
+                } else {
+                    const menuGrid = document.getElementById('menuGrid');
+                    if (menuGrid) {
+                        menuGrid.innerHTML = `
+                            <div class="empty-store">
+                                <i class="fas fa-utensils"></i>
+                                <p>Belum ada menu tersedia di toko ini</p>
+                                <a href="stores.html" class="btn-primary">Pilih Toko Lain</a>
+                            </div>
+                        `;
+                    }
+                }
+                
+                // Update cart badge
+                if (cart) {
+                    cart.updateCartBadge();
+                }
+            })();
+        }, 500);
+    });
+    
+    // Global variables for filtering
+    let currentFilter = 'all';
+    let currentSearchTerm = '';
+    let storeProducts = [];
+    
+    // Function to filter products by store
+    function filterProductsByStore(storeId) {
+        // Get menuItems from multiple sources
+        let allMenuItems = [];
+        if (typeof menuItems !== 'undefined' && Array.isArray(menuItems) && menuItems.length > 0) {
+            allMenuItems = menuItems;
+        } else if (typeof window.menuItems !== 'undefined' && Array.isArray(window.menuItems) && window.menuItems.length > 0) {
+            allMenuItems = window.menuItems;
+        }
+        
+        storeProducts = allMenuItems.filter(item => item.store_id == storeId);
+        
+        if (storeProducts.length === 0) {
+            const menuGrid = document.getElementById('menuGrid');
+            if (menuGrid) {
+                menuGrid.innerHTML = `
+                    <div class="empty-store">
+                        <i class="fas fa-utensils"></i>
+                        <p>Belum ada menu tersedia di toko ini</p>
+                        <a href="stores.html" class="btn-primary">Pilih Toko Lain</a>
+                    </div>
+                `;
+            }
+        } else {
+            renderProducts(storeProducts);
+        }
+    }
+    
+    // Function to render products
+    function renderProducts(products) {
+        const menuGrid = document.getElementById('menuGrid');
+        
+        if (products.length === 0) {
+            menuGrid.innerHTML = `
+                <div class="no-results">
+                    <i class="fas fa-search"></i>
+                    <h3>Tidak ada menu ditemukan</h3>
+                    <p>Coba kata kunci atau filter lain</p>
+                    <button onclick="resetFilters()" class="btn-primary">Reset Filter</button>
+                </div>
+            `;
+            return;
+        }
+        
+        menuGrid.innerHTML = products.map(item => `
+            <div class="menu-card" data-menu-id="${item.id}">
+                <div class="menu-card-image">
+                    <img src="${item.image}" alt="${item.name}">
+                    ${item.is_featured !== false ? '<div class="menu-badge">Best Seller</div>' : ''}
+                </div>
+                <div class="menu-card-content">
+                    <h3 class="menu-title">${item.name}</h3>
+                    <p class="menu-description">${item.description}</p>
+                    <div class="menu-footer">
+                        <span class="menu-price">${formatRupiah(item.price)}</span>
+                        <button class="btn-add-cart" onclick="addToCart(${item.id}, this)">
+                            <i class="fas fa-cart-plus"></i>
+                            <span>Tambah</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        
+        updateResultsCount(products.length);
+    }
+    
+    // Search function
+    function searchProducts() {
+        const searchInput = document.getElementById('searchInput');
+        currentSearchTerm = searchInput.value.toLowerCase();
+        
+        // Show/hide clear button
+        const clearBtn = document.getElementById('btnClearSearch');
+        clearBtn.style.display = currentSearchTerm ? 'flex' : 'none';
+        
+        applyFilters();
+    }
+    
+    // Clear search
+    function clearSearch() {
+        document.getElementById('searchInput').value = '';
+        currentSearchTerm = '';
+        document.getElementById('btnClearSearch').style.display = 'none';
+        applyFilters();
+    }
+    
+    // Filter products
+    function filterProducts(filterType) {
+        currentFilter = filterType;
+        
+        // Update active button
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.closest('.filter-btn').classList.add('active');
+        
+        // Update filter pill
+        updateFilterPill(filterType);
+        
+        applyFilters();
+    }
+    
+    // Apply all filters (search + sort)
+    function applyFilters() {
+        let filtered = [...storeProducts];
+        
+        // Apply search filter
+        if (currentSearchTerm) {
+            filtered = filtered.filter(item => 
+                item.name.toLowerCase().includes(currentSearchTerm) ||
+                item.description.toLowerCase().includes(currentSearchTerm)
+            );
+        }
+        
+        // Apply sort filter
+        switch(currentFilter) {
+            case 'popular':
+                // Sort by sales_count or featured
+                filtered.sort((a, b) => {
+                    const aScore = (a.is_featured !== false ? 100 : 0) + (a.sales_count || 0);
+                    const bScore = (b.is_featured !== false ? 100 : 0) + (b.sales_count || 0);
+                    return bScore - aScore;
+                });
+                break;
+            case 'price-low':
+                filtered.sort((a, b) => a.price - b.price);
+                break;
+            case 'price-high':
+                filtered.sort((a, b) => b.price - a.price);
+                break;
+            case 'name':
+                filtered.sort((a, b) => a.name.localeCompare(b.name));
+                break;
+            case 'all':
+            default:
+                // Default order
+                break;
+        }
+        
+        renderProducts(filtered);
+    }
+    
+    // Update filter pill
+    function updateFilterPill(filterType) {
+        const activeFilters = document.getElementById('activeFilters');
+        const filterText = document.getElementById('filterText');
+        
+        const filterNames = {
+            'all': 'Semua Menu',
+            'popular': 'Menu Populer',
+            'price-low': 'Harga Termurah',
+            'price-high': 'Harga Termahal',
+            'name': 'Urut A-Z'
+        };
+        
+        if (filterType !== 'all' || currentSearchTerm) {
+            activeFilters.style.display = 'flex';
+            filterText.textContent = filterNames[filterType] || 'Filter Aktif';
+        } else {
+            activeFilters.style.display = 'none';
+        }
+    }
+    
+    // Update results count
+    function updateResultsCount(count) {
+        const resultsCount = document.getElementById('resultsCount');
+        const totalProducts = storeProducts.length;
+        
+        if (currentSearchTerm) {
+            resultsCount.innerHTML = `Ditemukan <strong>${count}</strong> dari ${totalProducts} menu untuk "<strong>${currentSearchTerm}</strong>"`;
+        } else if (currentFilter !== 'all') {
+            resultsCount.innerHTML = `Menampilkan <strong>${count}</strong> menu`;
+        } else {
+            resultsCount.innerHTML = `Menampilkan <strong>${count}</strong> menu`;
+        }
+    }
+    
+    // Reset filters
+    function resetFilters() {
+        currentFilter = 'all';
+        currentSearchTerm = '';
+        document.getElementById('searchInput').value = '';
+        document.getElementById('btnClearSearch').style.display = 'none';
+        
+        // Reset active button
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.filter === 'all') {
+                btn.classList.add('active');
+            }
+        });
+        
+        applyFilters();
+    }
+    
+    // Function untuk ganti toko
+    function changeStore() {
+        if (confirm('Yakin ingin ganti toko? Keranjang akan dikosongkan.')) {
+            localStorage.removeItem('selectedStore');
+            cart.clearCart();
+            window.location.href = 'stores.html';
+        }
+    }
+    
+    // Function untuk tambah ke cart dengan animasi
+    function addToCart(menuId, eventElement) {
+        console.log('🛒 addToCart called:', menuId);
+        
+        // Ensure cart is initialized
+        if (!cart) {
+            if (typeof ShoppingCart !== 'undefined') {
+                cart = new ShoppingCart();
+                console.log('✅ Cart initialized');
+            } else {
+                alert('Keranjang belum siap. Silakan refresh halaman.');
+                return;
+            }
+        }
+        
+        // Get selected store
+        const selectedStoreStr = localStorage.getItem('selectedStore');
+        if (!selectedStoreStr) {
+            alert('Silakan pilih toko terlebih dahulu!');
+            window.location.href = 'stores.html';
+            return;
+        }
+        
+        const selectedStore = JSON.parse(selectedStoreStr);
+        console.log('📍 Selected store:', selectedStore);
+        
+        // Get menuItems from multiple sources
+        let items = [];
+        if (typeof menuItems !== 'undefined' && Array.isArray(menuItems) && menuItems.length > 0) {
+            items = menuItems;
+        } else if (typeof window.menuItems !== 'undefined' && Array.isArray(window.menuItems) && window.menuItems.length > 0) {
+            items = window.menuItems;
+        } else if (storeProducts && storeProducts.length > 0) {
+            items = storeProducts;
+        } else {
+            console.error('❌ menuItems not found!');
+            alert('Menu belum dimuat. Silakan refresh halaman.');
+            return;
+        }
+        
+        console.log('📦 Available items:', items.length);
+        
+        // Find menu item - try multiple ID matching methods
+        const menuItem = items.find(item => {
+            return item.id == menuId || 
+                   item.id === menuId || 
+                   String(item.id) === String(menuId) ||
+                   parseInt(item.id) === parseInt(menuId);
+        });
+        
+        if (!menuItem) {
+            console.error('❌ Menu item not found:', menuId);
+            console.error('Available IDs:', items.map(i => i.id));
+            alert('Produk tidak ditemukan! ID: ' + menuId);
+            return;
+        }
+        
+        console.log('✅ Found menu item:', menuItem.name);
+        
+        // Check if product belongs to selected store
+        if (menuItem.store_id != selectedStore.id) {
+            alert('Produk ini dari toko berbeda! Silakan pilih toko yang sesuai.');
+            return;
+        }
+        
+        // Get button element
+        let button = null;
+        if (eventElement) {
+            button = eventElement.closest ? eventElement.closest('.btn-add-cart') : eventElement;
+        }
+        
+        if (!button) {
+            // Try to find button by menu card
+            const menuCard = document.querySelector(`[data-menu-id="${menuId}"]`);
+            if (menuCard) {
+                button = menuCard.querySelector('.btn-add-cart');
+            }
+        }
+        
+        const originalHTML = button ? button.innerHTML : '';
+        
+        if (button) {
+            button.classList.add('loading');
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Menambah...</span>';
+            button.disabled = true;
+        }
+        
+        // Add to cart
+        try {
+            // Ensure menuItem has all required fields
+            const cartItem = {
+                id: menuItem.id,
+                name: menuItem.name,
+                price: menuItem.price || 0,
+                image: menuItem.image || 'asset/img/nasgor.png',
+                quantity: 1,
+                store_id: menuItem.store_id || selectedStore.id
+            };
+            
+            console.log('➕ Adding to cart:', cartItem);
+            cart.addItem(cartItem);
+            console.log('✅ Item added successfully!');
+            
+            if (button) {
+                button.classList.remove('loading');
+                button.classList.add('success');
+                button.innerHTML = '<i class="fas fa-check"></i> <span>Ditambah!</span>';
+                
+                // Kembali ke state normal
+                setTimeout(() => {
+                    button.classList.remove('success');
+                    button.innerHTML = originalHTML;
+                    button.disabled = false;
+                }, 1000);
+            }
+            
+            // Show notification
+            if (cart && cart.showNotification) {
+                cart.showNotification(`${menuItem.name} ditambahkan ke keranjang!`);
+            }
+            
+        } catch (error) {
+            console.error('❌ Error adding to cart:', error);
+            alert('Gagal menambahkan ke keranjang: ' + (error.message || error));
+            if (button) {
+                button.classList.remove('loading');
+                button.innerHTML = originalHTML;
+                button.disabled = false;
+            }
+        }
+    }
+    
+    
+    // Make functions globally accessible
+    window.addToCart = addToCart;
+    window.changeStore = changeStore;
+    window.filterProducts = filterProducts;
+    window.searchProducts = searchProducts;
+    window.clearSearch = clearSearch;
+    window.resetFilters = resetFilters;
+</script>
+</body>
+</html>

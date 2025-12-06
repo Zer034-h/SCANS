@@ -20,13 +20,11 @@
 
 <div class="container home-container">
     
-    <!-- Hero Section dengan Search -->
     <div class="home-hero">
         <div class="hero-content">
             <h2 class="hero-title">Lapar? Cari Menu Favoritmu! 🔍</h2>
             <p class="hero-description">Cari dari 50+ menu di 3 toko berbeda</p>
             
-            <!-- Global Search Bar -->
             <div class="global-search-container">
                 <div class="search-wrapper">
                     <i class="fas fa-search search-icon"></i>
@@ -42,11 +40,9 @@
                     </button>
                 </div>
                 
-                <!-- Search Suggestions Dropdown -->
                 <div class="search-suggestions" id="searchSuggestions" style="display: none;"></div>
             </div>
             
-            <!-- Quick Filters -->
             <div class="quick-filters">
                 <button class="quick-filter-btn active" data-filter="all">
                     <i class="fas fa-th"></i> Semua
@@ -67,13 +63,11 @@
         </div>
     </div>
     
-    <!-- Search Results Count -->
     <div class="search-results-header" id="searchResultsHeader" style="display: none;">
         <h3 id="searchResultsTitle">Hasil Pencarian</h3>
         <p id="searchResultsCount">0 menu ditemukan</p>
     </div>
     
-    <!-- Menu Grid (Global Search Results) -->
     <div class="menu-section" id="menuSection">
         <div class="section-header">
             <h3>✨ Menu Populer dari Semua Toko</h3>
@@ -81,7 +75,6 @@
         </div>
         
         <div class="menu-grid" id="globalMenuGrid">
-            <!-- Products will be loaded here via JavaScript -->
             <div class="loading-state">
                 <i class="fas fa-spinner fa-spin"></i>
                 <p>Memuat menu...</p>
@@ -89,7 +82,6 @@
         </div>
     </div>
     
-    <!-- Store Categories Quick Access -->
     <div class="store-quick-access">
         <h3>🏪 Atau Pilih Toko</h3>
         <div class="store-quick-grid">
@@ -118,7 +110,6 @@
     
 </div>
 
-<!-- Footer Navigation -->
 <footer id="footer">
     <a href="home.html" class="footer-nav-item active">
         <i class="fas fa-home"></i>
@@ -136,13 +127,11 @@
 
 </footer>
 
-<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
-<!-- Scripts -->
 <script src="js/firebase-config.js"></script>
 <script src="js/firebase-realtime.js"></script>
 <script src="js/firebase-data.js"></script>
@@ -153,9 +142,8 @@
 <script src="js/queue-system.js"></script>
 <script src="js/home.js"></script>
 <script>
-    // Check authentication first
+    
     document.addEventListener('DOMContentLoaded', () => {
-        // Wait for auth functions to load
         setTimeout(() => {
             if (typeof isAuthenticated === 'undefined' || !isAuthenticated()) {
                 sessionStorage.setItem('intended_url', window.location.href);
@@ -163,7 +151,6 @@
                 return;
             }
             
-            // Show user info in header
             const user = getCurrentUser();
             if (user) {
             // Update UI dengan user info
@@ -181,11 +168,9 @@
             }
         }
         
-        // Initialize cart badge
         const cart = new ShoppingCart();
         cart.updateCartBadge();
         
-            // Log page view
             setTimeout(() => {
                 if (window.ActivityLogger) {
                     ActivityLogger.custom('home_page_view', { 
